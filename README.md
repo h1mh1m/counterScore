@@ -17,10 +17,10 @@ Aplikasi papan skor digital untuk pertandingan badminton, dibuat menggunakan Flu
 
 ## 👥 Anggota Kelompok 2
 
-| Nama |
-|------|
-| Naufal Ahimsa R |
-| Hafidz Ulum Ramadhani |
+| Nama | NRP |
+|------| ------|
+| Naufal Ahimsa R | 50242410
+| Hafidz Ulum Ramadhani | 
 | Muhammad Sayyid Tsabit |
 | M Rasyha Syauqi Islam |
 | Rozaq Nafiul Hafidz |
