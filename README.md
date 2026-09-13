@@ -19,11 +19,11 @@ Aplikasi papan skor digital untuk pertandingan badminton, dibuat menggunakan Flu
 
 | Nama | NRP |
 |------| ------|
-| Naufal Ahimsa R | 50242410
-| Hafidz Ulum Ramadhani | 
-| Muhammad Sayyid Tsabit |
-| M Rasyha Syauqi Islam |
-| Rozaq Nafiul Hafidz |
+| Naufal Ahimsa R | 5024241018 |
+| Hafidz Ulum Ramadhani | 5024241014 |
+| Muhammad Sayyid Tsabit | 5024241013 |
+| M Rasyha Syauqi Islam | 5024241066 |
+| Rozaq Nafiul Hafidz | 5024241072 |
 
 
 ## 📄 Lisensi
