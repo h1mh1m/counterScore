@@ -23,7 +23,7 @@ Aplikasi papan skor digital untuk pertandingan badminton, dibuat menggunakan Flu
 | Hafidz Ulum Ramadhani | 5024241014 |
 | Muhammad Sayyid Tsabit | 5024241013 |
 | M Rasyha Syauqi Islam | 5024241066 |
-| Rozaq Nafiul Hafidz | 5024241072 |
+| Rozaq Nafi'ul Hafidz | 5024241072 |
 
 
 ## 📄 Lisensi
