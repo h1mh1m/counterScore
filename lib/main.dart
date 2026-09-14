@@ -35,34 +35,29 @@ class ScoreHomePageState extends State<ScoreHomePage> {
   int scoreTeamDua = 0;
   String TeamSatu = "Team 1";
   String TeamDua = "Team 2";
-  int MaxNilai = 10; //default value
+  int MaxNilai = 10;
+  bool isDeuceAktif = false; // toggle deuce
   final TextEditingController MaxControllerScore = TextEditingController(
     text: "10",
   );
 
   void incrementScoreTeamSatu() {
     setState(() {
-      if (scoreTeamSatu < MaxNilai) scoreTeamSatu++;
+      bool deuce = isDeuceAktif &&
+          scoreTeamSatu >= MaxNilai &&
+          scoreTeamDua >= MaxNilai;
+      if (scoreTeamSatu < MaxNilai || deuce) scoreTeamSatu++;
       checkWinner();
     });
   }
 
   void incrementScoreTeamDua() {
     setState(() {
-      if (scoreTeamDua < MaxNilai) scoreTeamDua++;
+      bool deuce = isDeuceAktif &&
+          scoreTeamSatu >= MaxNilai &&
+          scoreTeamDua >= MaxNilai;
+      if (scoreTeamDua < MaxNilai || deuce) scoreTeamDua++;
       checkWinner();
-    });
-  }
-
-  void decrementScoreTeamSatu() {
-    setState(() {
-      if (scoreTeamSatu > 0) scoreTeamSatu--;
-    });
-  }
-
-  void decrementScoreTeamDua() {
-    setState(() {
-      if (scoreTeamDua > 0) scoreTeamDua--;
     });
   }
 
@@ -77,7 +72,6 @@ class ScoreHomePageState extends State<ScoreHomePage> {
     final controller = TextEditingController(
       text: isTeamSatu ? TeamSatu : TeamDua,
     );
-
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -118,13 +112,32 @@ class ScoreHomePageState extends State<ScoreHomePage> {
   }
 
   void checkWinner() {
-    setState(() {
+    if (isDeuceAktif) {
+      // Mode deuce aktif
+      bool deuce = scoreTeamSatu >= MaxNilai && scoreTeamDua >= MaxNilai;
+      if (deuce) {
+        // Harus unggul 2 poin
+        if ((scoreTeamSatu - scoreTeamDua).abs() >= 2) {
+          String winner =
+              scoreTeamSatu > scoreTeamDua ? TeamSatu : TeamDua;
+          WinnerDialog(winner);
+        }
+      } else {
+        if (scoreTeamSatu == MaxNilai && scoreTeamSatu > scoreTeamDua) {
+          WinnerDialog(TeamSatu);
+        } else if (scoreTeamDua == MaxNilai &&
+            scoreTeamDua > scoreTeamSatu) {
+          WinnerDialog(TeamDua);
+        }
+      }
+    } else {
+      // Mode normal tanpa deuce
       if (scoreTeamSatu == MaxNilai && scoreTeamSatu > scoreTeamDua) {
         WinnerDialog(TeamSatu);
       } else if (scoreTeamDua == MaxNilai && scoreTeamDua > scoreTeamSatu) {
         WinnerDialog(TeamDua);
       }
-    });
+    }
   }
 
   void WinnerDialog(String team) {
@@ -153,55 +166,133 @@ class ScoreHomePageState extends State<ScoreHomePage> {
         MaxNilai = parsed;
         resetScore();
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Maksimal skor $MaxNilai ")));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Maksimal skor $MaxNilai")));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Cek kondisi deuce sedang terjadi
+    bool isDeuceTerjadi = isDeuceAktif &&
+        scoreTeamSatu >= MaxNilai &&
+        scoreTeamDua >= MaxNilai;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Aplikasi Penghitung Skor"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // --- Card Max Score ---
             Card(
               elevation: 4,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Row(
+                child: Column(
                   children: [
-                    const Text(
-                      "Max Score  ",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: MaxControllerScore,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          isDense: true,
-                          border: OutlineInputBorder(),
+                    // Baris Max Score
+                    Row(
+                      children: [
+                        const Text(
+                          "Max Score  ",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
+                        Expanded(
+                          child: TextField(
+                            controller: MaxControllerScore,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: updateMaxScore,
+                          child: const Text("Set"),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: updateMaxScore,
-                      child: const Text("Set"),
+
+                    const Divider(height: 20),
+
+                    // Baris Toggle Deuce
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Mode Deuce",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              isDeuceAktif
+                                  ? "Aktif — harus unggul 2 poin"
+                                  : "Nonaktif",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isDeuceAktif
+                                    ? Colors.amber
+                                    : Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Switch(
+                          value: isDeuceAktif,
+                          activeColor: Colors.amber,
+                          onChanged: (value) {
+                            setState(() {
+                              isDeuceAktif = value;
+                              resetScore();
+                            });
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+
+            const SizedBox(height: 16),
+
+            // --- Banner DEUCE! ---
+            if (isDeuceTerjadi)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.amber, width: 1.5),
+                ),
+                child: const Text(
+                  "⚡ DEUCE! Harus unggul 2 poin untuk menang!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.amber,
+                  ),
+                ),
+              ),
+
+            // --- Papan Skor ---
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -229,10 +320,12 @@ class ScoreHomePageState extends State<ScoreHomePage> {
                       const SizedBox(height: 10),
                       Text(
                         '$scoreTeamSatu',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 60,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
+                          color: isDeuceTerjadi
+                              ? Colors.amber
+                              : Colors.blueAccent,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -241,23 +334,17 @@ class ScoreHomePageState extends State<ScoreHomePage> {
                         icon: const Icon(Icons.add),
                         label: const Text("Tambah"),
                       ),
-                      const SizedBox(height: 5),
-                      OutlinedButton.icon(
-                        onPressed: decrementScoreTeamSatu,
-                        icon: const Icon(Icons.remove),
-                        label: const Text("Kurang"),
-                      ),
                     ],
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     "VS",
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white70,
+                      color: isDeuceTerjadi ? Colors.amber : Colors.white70,
                     ),
                   ),
                 ),
@@ -285,10 +372,12 @@ class ScoreHomePageState extends State<ScoreHomePage> {
                       const SizedBox(height: 10),
                       Text(
                         '$scoreTeamDua',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 60,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
+                          color: isDeuceTerjadi
+                              ? Colors.amber
+                              : Colors.blueAccent,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -297,27 +386,25 @@ class ScoreHomePageState extends State<ScoreHomePage> {
                         icon: const Icon(Icons.add),
                         label: const Text("Tambah"),
                       ),
-                      const SizedBox(height: 5),
-                      OutlinedButton.icon(
-                        onPressed: decrementScoreTeamDua,
-                        icon: const Icon(Icons.remove),
-                        label: const Text("Kurang"),
-                      ),
                     ],
                   ),
                 ),
               ],
             ),
+
             const SizedBox(height: 40),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                foregroundColor: Colors.white,
+
+            // --- Tombol Reset ---
+            if (scoreTeamSatu >= MaxNilai || scoreTeamDua >= MaxNilai)
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: resetScore,
+                label: const Text("Reset Nilai"),
+                icon: const Icon(Icons.refresh),
               ),
-              onPressed: resetScore,
-              label: const Text("Reset Nilai"),
-              icon: const Icon(Icons.refresh),
-            ),
           ],
         ),
       ),
