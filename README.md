@@ -4,11 +4,12 @@ Aplikasi papan skor digital untuk pertandingan badminton, dibuat menggunakan Flu
 
 ## ✨ Fitur
 
-- Pencatatan skor untuk kedua pemain/tim secara real-time
-- Pengaturan skor (tambah/kurangi poin)
-- Reset skor pertandingan
-- Tampilan skor yang jelas dan mudah dibaca
-- Antarmuka sederhana dan responsif
+- **Pencatatan Skor Real-time** — Skor langsung diperbarui setiap kali tombol "Tambah" ditekan.
+- **Pengaturan Skor Maksimum** — Pengguna dapat menentukan batas maksimum skor melalui kolom input "Max Score".
+- **Mode Deuce** — Saat kedua tim mencapai skor maksimum, tim harus unggul 2 poin untuk menang. Dapat diaktifkan/nonaktifkan lewat toggle switch.
+- **Reset Skor** — Mereset skor kedua tim ke 0, muncul otomatis saat salah satu tim mencapai skor maksimum.
+- **Ubah Nama Tim** — Nama tim dapat diubah dengan menekan ikon pensil di sebelah nama tim.
+- **Tampilan Responsif** — Skor ditampilkan besar dan jelas, warna berubah kuning saat kondisi deuce terjadi.
 
 ## 🛠️ Teknologi yang Digunakan
 
