@@ -54,18 +54,6 @@ class ScoreHomePageState extends State<ScoreHomePage> {
     });
   }
 
-  void decrementScoreTeamSatu() {
-    setState(() {
-      if (scoreTeamSatu > 0) scoreTeamSatu--;
-    });
-  }
-
-  void decrementScoreTeamDua() {
-    setState(() {
-      if (scoreTeamDua > 0) scoreTeamDua--;
-    });
-  }
-
   void resetScore() {
     setState(() {
       scoreTeamDua = 0;
@@ -241,12 +229,6 @@ class ScoreHomePageState extends State<ScoreHomePage> {
                         icon: const Icon(Icons.add),
                         label: const Text("Tambah"),
                       ),
-                      const SizedBox(height: 5),
-                      OutlinedButton.icon(
-                        onPressed: decrementScoreTeamSatu,
-                        icon: const Icon(Icons.remove),
-                        label: const Text("Kurang"),
-                      ),
                     ],
                   ),
                 ),
@@ -297,27 +279,22 @@ class ScoreHomePageState extends State<ScoreHomePage> {
                         icon: const Icon(Icons.add),
                         label: const Text("Tambah"),
                       ),
-                      const SizedBox(height: 5),
-                      OutlinedButton.icon(
-                        onPressed: decrementScoreTeamDua,
-                        icon: const Icon(Icons.remove),
-                        label: const Text("Kurang"),
-                      ),
                     ],
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 40),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                foregroundColor: Colors.white,
+            if (scoreTeamSatu >= MaxNilai || scoreTeamDua >= MaxNilai)
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: resetScore,
+                label: const Text("Reset Nilai"),
+                icon: const Icon(Icons.refresh),
               ),
-              onPressed: resetScore,
-              label: const Text("Reset Nilai"),
-              icon: const Icon(Icons.refresh),
-            ),
           ],
         ),
       ),
