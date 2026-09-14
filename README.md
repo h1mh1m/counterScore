@@ -26,6 +26,41 @@ Aplikasi papan skor digital untuk pertandingan badminton, dibuat menggunakan Flu
 | Rozaq Nafi'ul Hafidz | 5024241072 |
 
 
+## 🚀 How to Run
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/h1mh1m/counterScore.git
+```
+
+### 2. Masuk ke Folder Project
+
+```bash
+cd counterScore
+```
+
+### 3. Install Dependencies
+
+```bash
+flutter pub get
+```
+
+### 4. Jalankan Aplikasi
+
+```bash
+flutter run
+```
+
+Pastikan perangkat atau emulator sudah terhubung dan terdeteksi oleh Flutter.
+
+Untuk melihat device yang tersedia:
+
+```bash
+flutter devices
+```
+
+
 ## 📄 Lisensi
 
 Project ini dibuat untuk keperluan tugas kelompok/akademik.
